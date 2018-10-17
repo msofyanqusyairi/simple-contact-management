@@ -1,55 +1,69 @@
 import React, { Component } from 'react'
-import { createBottomTabNavigator, createStackNavigator } from 'react-navigation'
-import { View, Text } from 'react-native'
+import { createMaterialTopTabNavigator, createStackNavigator } from 'react-navigation'
+import { View, Text, Platform } from 'react-native'
+import StatusBackground from '../components/StatusBackground/StatusBackground'
 
 /**
  * screen list for staknav
  */
-import HomeLanding from './HomeLanding/HomeLanding'
+import CreateContact from './CreateContact/CreateContact'
 
 /**
  * screen list for tab
  */
+import Favorites from './Favorites/Favorites'
+import Recents from './Recents/Recents'
+import Contacts from './Contacts/Contacts'
 
 /**
  * import all icon tabnav
  */
 
+
 import LandingTabNavigator from '../components/Common_TabNavigator/Common_TabNavigator'
 
-const itemMenu = {
-  list: [
-    // {
-    //   contentId: 1,
-    //   txt: 'HOME',
-    //   path: 'Home',
-    //   attachedImg: HomeIcon,
-    //   activeImg: HomeIconActive,
-    // },
-  ]
-}
+// const itemMenu = {
+//   list: [
+//     // {
+//     //   contentId: 1,
+//     //   txt: 'HOME',
+//     //   path: 'Home',
+//     //   attachedImg: HomeIcon,
+//     //   activeImg: HomeIconActive,
+//     // },
+//   ]
+// }
 
-// const TabNav = createBottomTabNavigator(
-//   {},
-//   {
-//     navigationOptions: ({ navigation }) => ({
-//       tabBarComponent: (({ navigation }) =>
-//         <LandingTabNavigator
-//           backgroundColor={'#57b752'}
-//           itemMenu={itemMenu}
-//           navigation={navigation}
-//         />)
-//     }),
-//     initialRouteName: 'Home',
-//     lazy: true
-//   }
-// )
+const TabNav = createMaterialTopTabNavigator(
+  {
+    Favorites: { screen: Favorites },
+    // Recents: { screen: Recents },
+    Contacts: { screen: Contacts }
+  },
+  {
+    tabBarOptions: {
+      activeTintColor: '#fff',
+      labelStyle: {
+        fontSize: 12,
+        fontFamily: 'Poppins-Regular'
+      },
+      style: {
+        backgroundColor: '#6B52AD',
+      },
+      tabStyle: {
+        paddingTop: (Platform.OS === 'ios') ? 50 : 0
+      }
+    },
+    initialRouteName: 'Favorites',
+    lazy: true
+  }
+)
 
 const StackNav = createStackNavigator({
-  // Root: { screen: TabNav, navigationOptions: { header: null } },
-  HomeLanding: { screen: HomeLanding },
+  Root: { screen: TabNav, navigationOptions: { header: null } },
+  CreateContact: { screen: CreateContact }
 }, {
-    initialRouteName: 'HomeLanding',
+    initialRouteName: 'Root',
     headerMode: "screen",
     navigationOptions: {
       headerStyle: {

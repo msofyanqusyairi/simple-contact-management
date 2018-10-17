@@ -13,9 +13,7 @@ import AppNav from './app/AppNav'
 export default class App extends Component {
   render() {
     return (
-      <View>
-        <AppNav />
-      </View>
+      <AppNav />
     );
   }
 }

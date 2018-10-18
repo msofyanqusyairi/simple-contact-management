@@ -7,6 +7,7 @@ import StatusBackground from '../components/StatusBackground/StatusBackground'
  * screen list for staknav
  */
 import CreateContact from './CreateContact/CreateContact'
+import ChoosePhoto from './ChoosePhoto/ChoosePhoto'
 
 /**
  * screen list for tab
@@ -36,9 +37,9 @@ import LandingTabNavigator from '../components/Common_TabNavigator/Common_TabNav
 
 const TabNav = createMaterialTopTabNavigator(
   {
+    Contacts: { screen: Contacts },
     Favorites: { screen: Favorites },
     // Recents: { screen: Recents },
-    Contacts: { screen: Contacts }
   },
   {
     tabBarOptions: {
@@ -54,20 +55,21 @@ const TabNav = createMaterialTopTabNavigator(
         paddingTop: (Platform.OS === 'ios') ? 50 : 0
       }
     },
-    initialRouteName: 'Favorites',
+    initialRouteName: 'Contacts',
     lazy: true
   }
 )
 
 const StackNav = createStackNavigator({
   Root: { screen: TabNav, navigationOptions: { header: null } },
-  CreateContact: { screen: CreateContact }
+  CreateContact: { screen: CreateContact },
+  ChoosePhoto: { screen: ChoosePhoto }
 }, {
     initialRouteName: 'Root',
     headerMode: "screen",
     navigationOptions: {
       headerStyle: {
-        backgroundColor: "#57b752",
+        backgroundColor: '#6B52AD',
         height: 60,
         shadowOpacity: 0,
         shadowOffset: {

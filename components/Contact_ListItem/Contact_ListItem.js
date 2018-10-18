@@ -31,7 +31,7 @@ export default class Contact_ListItem extends Component {
     this._init()
 
     return (
-      <TouchableOpacity
+      <TouchableOpacity      
         activeOpacity={0.5}
         onPress={this._onPress}>
         <View>

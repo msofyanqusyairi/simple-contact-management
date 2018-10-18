@@ -26,7 +26,11 @@ export default class Contacts extends Component {
   }
 
   _onPressContact(item) {
-    Alert.alert(item.firstName)
+    this.refs.navHelper.navigate('ContactDetail', {
+      data: {
+        id: item.id
+      }
+    })
   }
 
   _onCreateContact() {

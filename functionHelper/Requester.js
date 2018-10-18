@@ -1,17 +1,22 @@
 const HOSTNAME = 'https://simple-contact-crud.herokuapp.com'
-const GET_CONTACTS = HOSTNAME + '/contact'
-const CREATE_CONTACT = HOSTNAME + '/contact'
+const API_CONTACTS = HOSTNAME + '/contact'
 
 var HttpRequest = require('./HttpRequest')
 
 exports.getContacts = async function () {
-  let contacts = await HttpRequest.Get(GET_CONTACTS)
+  let res = await HttpRequest.Get(API_CONTACTS)
 
-  return contacts
+  return res
 }
 
 exports.createContact = async function (body) {
-  let res = await HttpRequest.Post(CREATE_CONTACT, body)
+  let res = await HttpRequest.Post(API_CONTACTS, body)
+
+  return res
+}
+
+exports.getContact = async function (id) {
+  let res = await HttpRequest.Get(API_CONTACTS + `/${id}`)
 
   return res
 }

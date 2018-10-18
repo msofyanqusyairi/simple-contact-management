@@ -83,6 +83,15 @@ export default class Common_AvatarIcon extends Component {
             borderWidth: this.style.borderWidth,
             borderColor: this.style.borderColor
         }
+        if (!this.props.onPress) {
+            return (
+                <View>
+                    <Image
+                        style={imageStyle}
+                        source={this.image} />
+                </View>
+            )
+        }
         return (
             <TouchableOpacity
                 activeOpacity={0.5}

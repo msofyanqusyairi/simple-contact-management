@@ -8,12 +8,12 @@ import StatusBackground from '../components/StatusBackground/StatusBackground'
  */
 import CreateContact from './CreateContact/CreateContact'
 import ChoosePhoto from './ChoosePhoto/ChoosePhoto'
+import ContactDetail from './ContactDetail/ContactDetail'
 
 /**
  * screen list for tab
  */
 import Favorites from './Favorites/Favorites'
-import Recents from './Recents/Recents'
 import Contacts from './Contacts/Contacts'
 
 /**
@@ -63,7 +63,8 @@ const TabNav = createMaterialTopTabNavigator(
 const StackNav = createStackNavigator({
   Root: { screen: TabNav, navigationOptions: { header: null } },
   CreateContact: { screen: CreateContact },
-  ChoosePhoto: { screen: ChoosePhoto }
+  ChoosePhoto: { screen: ChoosePhoto },
+  ContactDetail: { screen: ContactDetail }
 }, {
     initialRouteName: 'Root',
     headerMode: "screen",

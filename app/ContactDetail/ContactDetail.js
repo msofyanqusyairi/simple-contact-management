@@ -4,6 +4,7 @@ import TextInput from '../../components/Common_TextInput/Common_TextInput'
 import Button from '../../components/Common_Button/Common_Button'
 import Avatar from '../../components/Common_AvatarIcon/Common_AvatarIcon'
 import NavigationHelper from '../../components/Common_NavigationHelper/Common_NavigationHelper'
+import FavoritesContactAction from '../../realm/actions/favorites'
 
 var Requester = require('../../functionHelper/Requester')
 
@@ -11,19 +12,25 @@ export default class CreateContact extends Component {
   constructor(props) {
     super(props)
     this.state = {
-      contactDetail: {}
+      contactDetail: {},
+      isFavorite: false
     }
     this.id = this.props.navigation.state.params.data.id
+    this.favContactAction = new FavoritesContactAction()
 
     this._onEdit = this._onEdit.bind(this)
     this._onDelete = this._onDelete.bind(this)
     this._reload = this._reload.bind(this)
+    this._onPressFavorite = this._onPressFavorite.bind(this)
   }
 
   async componentDidMount() {
     let res = await Requester.getContact(this.id)
+    let fav = this.favContactAction.GetFavoritesContact()
+    console.log(fav, this.id, fav.includes(this.id))
     this.setState({
-      contactDetail: res.data
+      contactDetail: res.data,
+      isFavorite: fav.includes(this.id)
     })
   }
 
@@ -71,6 +78,13 @@ export default class CreateContact extends Component {
     })
   }
 
+  _onPressFavorite() {
+    if (!this.state.isFavorite)
+      this.favContactAction.AddFavoritesContact(this.state.contactDetail.id)
+    else
+      this.favContactAction.RemoveFavoritesContact(this.state.contactDetail.id)
+  }
+
   render() {
     return (
       <View style={{ paddingHorizontal: 15 }}>
@@ -97,6 +111,20 @@ export default class CreateContact extends Component {
           style={{
             alignItems: 'center'
           }}>
+          <Button
+            onPress={this._onPressFavorite}
+            text={this.state.isFavorite ? 'unfavorite' : 'favorite'}
+            style={{
+              // borderWidth: 1,
+              // borderColor: '#e2e2e2',
+              backgroundColor: 'green',
+              borderRadius: 10,
+              width: '90%'
+            }}
+          // textStyle={{
+          //   color: 'blue'
+          // }}
+          />
           <Button
             onPress={this._onEdit}
             text={'edit'}

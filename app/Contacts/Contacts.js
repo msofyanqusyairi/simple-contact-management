@@ -29,12 +29,14 @@ export default class Contacts extends Component {
     this.refs.navHelper.navigate('ContactDetail', {
       data: {
         id: item.id
-      }
+      },
+      reload: this._reload
     })
   }
 
   _onCreateContact() {
     this.refs.navHelper.navigate('CreateContact', {
+      data: {},
       reload: this._reload
     })
   }

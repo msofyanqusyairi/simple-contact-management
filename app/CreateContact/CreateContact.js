@@ -10,19 +10,24 @@ var Requester = require('../../functionHelper/Requester')
 export default class CreateContact extends Component {
   constructor(props) {
     super(props)
+    let params = props.navigation.state.params
     this.state = {
-      firstName: '',
-      lastName: '',
-      age: '',
-      photo: 'http://www.mhcsa.org.au/wp-content/uploads/2016/08/default-non-user-no-photo-768x768.jpg'
+      firstName: params.data.firstName || '',
+      lastName: params.data.lastName || '',
+      age: params.data.age != undefined ? params.data.age.toString() : '',
+      photo: (params.data.photo != 'N/A' && params.data.photo) ?
+        params.data.photo :
+        'http://www.mhcsa.org.au/wp-content/uploads/2016/08/default-non-user-no-photo-768x768.jpg'
     }
+    this.id = params.data.id || ''
+    this.role = params.data.role || 'create'
 
     this._onChangeFirstName = this._onChangeFirstName.bind(this)
     this._onChangeLastName = this._onChangeLastName.bind(this)
     this._onChangeAge = this._onChangeAge.bind(this)
     this._onChoosePhoto = this._onChoosePhoto.bind(this)
     this._setPhoto = this._setPhoto.bind(this)
-    this._onCreate = this._onCreate.bind(this)
+    this._onSave = this._onSave.bind(this)
   }
 
   _onChangeFirstName(text) {
@@ -58,20 +63,33 @@ export default class CreateContact extends Component {
     })
   }
 
-  async _onCreate() {
+  async _onSave() {
     let body = {
       firstName: this.state.firstName,
       lastName: this.state.lastName,
       age: this.state.age,
       photo: this.state.photo
     }
-    let res = await Requester.createContact(body)
-    Alert.alert(res.message)
-    if (!res.error) {
-      if (this.props.navigation.state.params.reload) {
-        this.props.navigation.state.params.reload()
+    if (this.role == 'create') {
+      let res = await Requester.createContact(body)
+      Alert.alert(res.message)
+      if (!res.error) {
+        if (this.props.navigation.state.params.reload) {
+          this.props.navigation.state.params.reload()
+        }
+        this.props.navigation.goBack()
       }
-      this.props.navigation.goBack()
+    }
+    else {
+      let res = await Requester.updateContact(body, this.id)
+      Alert.alert(res.message)
+      if (!res.error) {
+        if (this.props.navigation.state.params.reload && this.props.navigation.state.params.reloadDetail) {
+          this.props.navigation.state.params.reload()
+          this.props.navigation.state.params.reloadDetail()
+        }
+        this.props.navigation.goBack()
+      }
     }
   }
 
@@ -88,12 +106,15 @@ export default class CreateContact extends Component {
           />
         </View>
         <TextInput
+          value={this.state.firstName}
           title={'First Name'}
           onChangeText={this._onChangeFirstName} />
         <TextInput
+          value={this.state.lastName}
           title={'Last Name'}
           onChangeText={this._onChangeLastName} />
         <TextInput
+          value={this.state.age}
           keyboardType={'number-pad'}
           title={'Age'}
           onChangeText={this._onChangeAge} />
@@ -102,8 +123,8 @@ export default class CreateContact extends Component {
             alignItems: 'center'
           }}>
           <Button
-            onPress={this._onCreate}
-            text={'create'}
+            onPress={this._onSave}
+            text={this.role == 'create' ? 'create' : 'update'}
             style={{
               // borderWidth: 1,
               // borderColor: '#e2e2e2',

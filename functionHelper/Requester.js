@@ -20,3 +20,15 @@ exports.getContact = async function (id) {
 
   return res
 }
+
+exports.updateContact = async function (body, id) {
+  let res = await HttpRequest.Put(API_CONTACTS + `/${id}`, body)
+
+  return res
+}
+
+exports.deleteContact = async function (id) {
+  let res = await HttpRequest.Delete(API_CONTACTS + `/${id}`)
+
+  return res
+}

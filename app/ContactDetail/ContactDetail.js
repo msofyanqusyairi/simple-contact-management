@@ -14,9 +14,57 @@ export default class CreateContact extends Component {
       contactDetail: {}
     }
     this.id = this.props.navigation.state.params.data.id
+
+    this._onEdit = this._onEdit.bind(this)
+    this._onDelete = this._onDelete.bind(this)
+    this._reload = this._reload.bind(this)
   }
 
   async componentDidMount() {
+    let res = await Requester.getContact(this.id)
+    this.setState({
+      contactDetail: res.data
+    })
+  }
+
+  _onEdit() {
+    this.refs.navHelper.navigate('CreateContact', {
+      data: {
+        role: 'edit',
+        id: this.state.contactDetail.id,
+        ...this.state.contactDetail
+      },
+      reload: this.props.navigation.state.params.reload,
+      reloadDetail: this._reload
+    })
+  }
+
+  async _onDelete() {
+    Alert.alert(
+      "Delete Contact",
+      "are you sure want to delete this contact ?",
+      [
+        {
+          text: 'yes', onPress: async () => {
+            let res = await Requester.deleteContact(this.state.contactDetail.id)
+            if (!res.error & res.statusCode != 400 && res.statusCode != 500) {
+              this.props.navigation.state.params.reload()
+              setTimeout(() => {
+                this.refs.navHelper.navigateToNewStack('Root')
+              }, 500)
+            }
+            else {
+              Alert.alert(res.message)
+            }
+          }, style: 'default'
+        },
+        { text: 'Cancel', onPress: () => console.log('Cancel Pressed'), style: 'cancel' },
+      ],
+      { cancelable: true }
+    )
+  }
+
+  async _reload() {
     let res = await Requester.getContact(this.id)
     this.setState({
       contactDetail: res.data
@@ -31,7 +79,7 @@ export default class CreateContact extends Component {
           <Avatar
             width={100}
             height={100}
-            image={{ uri: this.state.photo }}
+            image={{ uri: (this.state.contactDetail.photo != 'N/A' && this.state.contactDetail.photo) ? this.state.contactDetail.photo : 'http://www.mhcsa.org.au/wp-content/uploads/2016/08/default-non-user-no-photo-768x768.jpg' }}
             onPress={this._onChoosePhoto}
           />
           <Text style={{

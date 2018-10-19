@@ -18,6 +18,11 @@ export default class Favorites extends Component {
     this._onPressContact = this._onPressContact.bind(this)
     this._onCreateContact = this._onCreateContact.bind(this)
     this._reload = this._reload.bind(this)
+    this._handleDidFocus = this._handleDidFocus.bind(this)
+  }
+
+  shouldComponentUpdate(nextProps, nextState) {
+    return (JSON.stringify(nextState) != JSON.stringify(this.state))
   }
 
   async componentDidMount() {
@@ -51,10 +56,18 @@ export default class Favorites extends Component {
     })
   }
 
+  async _handleDidFocus() {
+    let fav = this.favContactAction.GetFavoritesContact()
+    let contacts = await Requester.getContacts()
+    this.setState({
+      contacts: contacts.data.filter(contact => fav.includes(contact.id))
+    })
+  }
+
   render() {
     return (
       <View style={{ flex: 1 }}>
-        <NavigationHelper ref={'navHelper'} navigation={this.props.navigation} />
+        <NavigationHelper onDidFocus={this._handleDidFocus} ref={'navHelper'} navigation={this.props.navigation} />
         <ContactList
           items={this.state.contacts}
           onPressItem={this._onPressContact} />

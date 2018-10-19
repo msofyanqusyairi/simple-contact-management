@@ -27,7 +27,6 @@ export default class CreateContact extends Component {
   async componentDidMount() {
     let res = await Requester.getContact(this.id)
     let fav = this.favContactAction.GetFavoritesContact()
-    console.log(fav, this.id, fav.includes(this.id))
     this.setState({
       contactDetail: res.data,
       isFavorite: fav.includes(this.id)
@@ -78,11 +77,18 @@ export default class CreateContact extends Component {
     })
   }
 
-  _onPressFavorite() {
+  async _onPressFavorite() {
     if (!this.state.isFavorite)
       this.favContactAction.AddFavoritesContact(this.state.contactDetail.id)
     else
       this.favContactAction.RemoveFavoritesContact(this.state.contactDetail.id)
+
+    let res = await Requester.getContact(this.id)
+    let fav = this.favContactAction.GetFavoritesContact()
+    this.setState({
+      contactDetail: res.data,
+      isFavorite: fav.includes(this.id)
+    })
   }
 
   render() {

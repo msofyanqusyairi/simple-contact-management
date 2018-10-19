@@ -10,6 +10,12 @@ import {
 const SCREEN_WIDTH = Dimensions.get('screen').width
 
 export default class ChoosePhoto extends Component {
+  static navigationOptions = ({navigation}) => {
+    return {
+      title: 'Choose Photo'
+    }
+  }
+
   constructor(props) {
     super(props)
 

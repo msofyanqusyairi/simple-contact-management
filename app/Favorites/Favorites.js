@@ -1,9 +1,10 @@
 import React, { Component } from 'react';
-import { View, Alert } from 'react-native';
+import { View, Alert,Text } from 'react-native';
 import ContactList from '../../components/Contact_List/Contact_List'
 import Button from '../../components/Common_Button/Common_Button'
 import NavigationHelper from '../../components/Common_NavigationHelper/Common_NavigationHelper'
 import FavoritesContactAction from '../../realm/actions/favorites'
+import Loading from '../../components/Common_Loading/Common_Loading'
 
 const Requester = require('../../functionHelper/Requester')
 
@@ -11,7 +12,8 @@ export default class Favorites extends Component {
   constructor(props) {
     super(props)
     this.state = {
-      contacts: []
+      contacts: [],
+      didMount: false
     }
     this.favContactAction = new FavoritesContactAction()
 
@@ -29,7 +31,8 @@ export default class Favorites extends Component {
     let fav = this.favContactAction.GetFavoritesContact()
     let contacts = await Requester.getContacts()
     this.setState({
-      contacts: contacts.data.filter(contact => fav.includes(contact.id))
+      contacts: contacts.data.filter(contact => fav.includes(contact.id)),
+      didMount: true
     })
   }
 
@@ -43,16 +46,18 @@ export default class Favorites extends Component {
   }
 
   _onCreateContact() {
-    this.refs.navHelper.navigate('CreateContact', {
+    this.refs.navHelper.navigate('ContactForm', {
+      title: 'Create Contact',
       data: {},
       reload: this._reload
     })
   }
 
   async _reload() {
+    let fav = this.favContactAction.GetFavoritesContact()
     let contacts = await Requester.getContacts()
     this.setState({
-      contacts: contacts.data
+      contacts: contacts.data.filter(contact => fav.includes(contact.id))
     })
   }
 
@@ -65,9 +70,29 @@ export default class Favorites extends Component {
   }
 
   render() {
+    let _renderNoDataView = () => {
+      if (this.state.contacts.length == 0) {
+        return (
+          <View style={{
+            marginVertical: 15,
+            alignItems: 'center'
+          }}>
+            <Text style={{
+              fontFamily: 'Poppins-SemiBold',
+              fontSize: 15
+            }}>
+              No Favorite Contact
+            </Text>
+          </View>
+        )
+      }
+    }
+
+    if (!this.state.didMount) return <Loading />
     return (
       <View style={{ flex: 1 }}>
         <NavigationHelper onDidFocus={this._handleDidFocus} ref={'navHelper'} navigation={this.props.navigation} />
+        {_renderNoDataView()}
         <ContactList
           items={this.state.contacts}
           onPressItem={this._onPressContact} />

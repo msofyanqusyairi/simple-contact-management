@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { View, Text, Alert } from 'react-native';
+import { View, Text, Alert, ScrollView } from 'react-native';
 import TextInput from '../../components/Common_TextInput/Common_TextInput'
 import Button from '../../components/Common_Button/Common_Button'
 import Avatar from '../../components/Common_AvatarIcon/Common_AvatarIcon'
@@ -7,7 +7,13 @@ import NavigationHelper from '../../components/Common_NavigationHelper/Common_Na
 
 var Requester = require('../../functionHelper/Requester')
 
-export default class CreateContact extends Component {
+export default class ContactForm extends Component {
+  static navigationOptions = ({ navigation }) => {
+    return {
+      title: navigation.state.params.title
+    }
+  }
+
   constructor(props) {
     super(props)
     let params = props.navigation.state.params
@@ -95,49 +101,55 @@ export default class CreateContact extends Component {
 
   render() {
     return (
-      <View style={{ paddingHorizontal: 15 }}>
-        <NavigationHelper ref={'navHelper'} navigation={this.props.navigation} />
-        <View style={{ alignItems: 'center' }}>
-          <Avatar
-            width={100}
-            height={100}
-            image={{ uri: this.state.photo }}
-            onPress={this._onChoosePhoto}
-          />
-        </View>
-        <TextInput
-          value={this.state.firstName}
-          title={'First Name'}
-          onChangeText={this._onChangeFirstName} />
-        <TextInput
-          value={this.state.lastName}
-          title={'Last Name'}
-          onChangeText={this._onChangeLastName} />
-        <TextInput
-          value={this.state.age}
-          keyboardType={'number-pad'}
-          title={'Age'}
-          onChangeText={this._onChangeAge} />
-        <View
-          style={{
-            alignItems: 'center'
-          }}>
-          <Button
-            onPress={this._onSave}
-            text={this.role == 'create' ? 'create' : 'update'}
+      <ScrollView bounces={false} keyboardShouldPersistTaps={'always'}>
+        <View style={{ paddingHorizontal: 15, flex: 1 }}>
+          <NavigationHelper ref={'navHelper'} navigation={this.props.navigation} />
+          <View style={{ alignItems: 'center' }}>
+            <Avatar
+              width={100}
+              height={100}
+              image={{ uri: this.state.photo }}
+              onPress={this._onChoosePhoto}
+            />
+          </View>
+          <TextInput
+            value={this.state.firstName}
+            title={'First Name'}
+            onChangeText={this._onChangeFirstName} />
+          <TextInput
+            value={this.state.lastName}
+            title={'Last Name'}
+            onChangeText={this._onChangeLastName} />
+          <TextInput
+            value={this.state.age}
+            keyboardType={'number-pad'}
+            title={'Age'}
             style={{
-              // borderWidth: 1,
-              // borderColor: '#e2e2e2',
-              backgroundColor: 'blue',
-              borderRadius: 10,
-              width: '90%'
+              width: 50
             }}
-          // textStyle={{
-          //   color: 'blue'
-          // }}
-          />
+            onChangeText={this._onChangeAge} />
+          <View
+            style={{
+              alignItems: 'center'
+            }}>
+            <Button
+              onPress={this._onSave}
+              text={this.role == 'create' ? 'create' : 'update'}
+              style={{
+                // borderWidth: 1,
+                // borderColor: '#e2e2e2',
+                backgroundColor: 'blue',
+                borderRadius: 10,
+                width: '90%',
+                marginTop: 15
+              }}
+            // textStyle={{
+            //   color: 'blue'
+            // }}
+            />
+          </View>
         </View>
-      </View>
+      </ScrollView>
     );
   }
 }

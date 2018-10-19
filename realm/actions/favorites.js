@@ -30,7 +30,6 @@ export default class FavoritesContactAction {
   AddFavoritesContact(id) {
     try {
       this.OpenRealmSchema()
-      console.log('masuk')
       this.realm.write(() => {
         this.realm.create(this.schemaName, { id: id });
         console.log('add success')

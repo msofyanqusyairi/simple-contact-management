@@ -6,7 +6,7 @@ import StatusBackground from '../components/StatusBackground/StatusBackground'
 /**
  * screen list for staknav
  */
-import CreateContact from './CreateContact/CreateContact'
+import ContactForm from './ContactForm/ContactForm'
 import ChoosePhoto from './ChoosePhoto/ChoosePhoto'
 import ContactDetail from './ContactDetail/ContactDetail'
 
@@ -16,30 +16,10 @@ import ContactDetail from './ContactDetail/ContactDetail'
 import Favorites from './Favorites/Favorites'
 import Contacts from './Contacts/Contacts'
 
-/**
- * import all icon tabnav
- */
-
-
-import LandingTabNavigator from '../components/Common_TabNavigator/Common_TabNavigator'
-
-// const itemMenu = {
-//   list: [
-//     // {
-//     //   contentId: 1,
-//     //   txt: 'HOME',
-//     //   path: 'Home',
-//     //   attachedImg: HomeIcon,
-//     //   activeImg: HomeIconActive,
-//     // },
-//   ]
-// }
-
 const TabNav = createMaterialTopTabNavigator(
   {
     Contacts: { screen: Contacts },
-    Favorites: { screen: Favorites },
-    // Recents: { screen: Recents },
+    Favorites: { screen: Favorites }
   },
   {
     tabBarOptions: {
@@ -62,7 +42,7 @@ const TabNav = createMaterialTopTabNavigator(
 
 const StackNav = createStackNavigator({
   Root: { screen: TabNav, navigationOptions: { header: null } },
-  CreateContact: { screen: CreateContact },
+  ContactForm: { screen: ContactForm },
   ChoosePhoto: { screen: ChoosePhoto },
   ContactDetail: { screen: ContactDetail }
 }, {

@@ -47,7 +47,7 @@ export default class Common_Button extends Component {
     return (
       <TouchableOpacity
         style={[this.containerStyle, this.props.style]}
-        activeOpacity={1}
+        activeOpacity={0.5}
         onPress={this._onPress}>
         <View>
           {this.props.children ?

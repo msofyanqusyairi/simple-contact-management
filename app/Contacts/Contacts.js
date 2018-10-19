@@ -1,8 +1,9 @@
 import React, { Component } from 'react';
-import { View, Alert } from 'react-native';
+import { View, Alert, Text } from 'react-native';
 import ContactList from '../../components/Contact_List/Contact_List'
 import Button from '../../components/Common_Button/Common_Button'
 import NavigationHelper from '../../components/Common_NavigationHelper/Common_NavigationHelper'
+import Loading from '../../components/Common_Loading/Common_Loading'
 
 const Requester = require('../../functionHelper/Requester')
 
@@ -10,7 +11,8 @@ export default class Contacts extends Component {
   constructor(props) {
     super(props)
     this.state = {
-      contacts: []
+      contacts: [],
+      didMount: false
     }
 
     this._onPressContact = this._onPressContact.bind(this)
@@ -26,7 +28,8 @@ export default class Contacts extends Component {
   async componentDidMount() {
     let contacts = await Requester.getContacts()
     this.setState({
-      contacts: contacts.data
+      contacts: contacts.data,
+      didMount: true
     })
   }
 
@@ -40,7 +43,8 @@ export default class Contacts extends Component {
   }
 
   _onCreateContact() {
-    this.refs.navHelper.navigate('CreateContact', {
+    this.refs.navHelper.navigate('ContactForm', {
+      title: 'Create Contact',
       data: {},
       reload: this._reload
     })
@@ -61,9 +65,29 @@ export default class Contacts extends Component {
   }
 
   render() {
+    let _renderNoDataView = () => {
+      if (this.state.contacts.length == 0) {
+        return (
+          <View style={{
+            marginVertical: 15,
+            alignItems: 'center'
+          }}>
+            <Text style={{
+              fontFamily: 'Poppins-SemiBold',
+              fontSize: 15
+            }}>
+              No Contact Result
+            </Text>
+          </View>
+        )
+      }
+    }
+
+    if (!this.state.didMount) return <Loading />
     return (
       <View style={{ flex: 1 }}>
         <NavigationHelper onDidFocus={this._handleDidFocus} ref={'navHelper'} navigation={this.props.navigation} />
+        {_renderNoDataView()}
         <ContactList
           items={this.state.contacts}
           onPressItem={this._onPressContact} />

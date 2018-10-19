@@ -5,15 +5,23 @@ import Button from '../../components/Common_Button/Common_Button'
 import Avatar from '../../components/Common_AvatarIcon/Common_AvatarIcon'
 import NavigationHelper from '../../components/Common_NavigationHelper/Common_NavigationHelper'
 import FavoritesContactAction from '../../realm/actions/favorites'
+import Loading from '../../components/Common_Loading/Common_Loading'
 
 var Requester = require('../../functionHelper/Requester')
 
-export default class CreateContact extends Component {
+export default class ContactDetail extends Component {
+  static navigationOptions = ({navigation}) => {
+    return {
+      title: 'Contact Detail'
+    }
+  }
+
   constructor(props) {
     super(props)
     this.state = {
       contactDetail: {},
-      isFavorite: false
+      isFavorite: false,
+      didMount: false
     }
     this.id = this.props.navigation.state.params.data.id
     this.favContactAction = new FavoritesContactAction()
@@ -29,12 +37,14 @@ export default class CreateContact extends Component {
     let fav = this.favContactAction.GetFavoritesContact()
     this.setState({
       contactDetail: res.data,
-      isFavorite: fav.includes(this.id)
+      isFavorite: fav.includes(this.id),
+      didMount: true
     })
   }
 
   _onEdit() {
-    this.refs.navHelper.navigate('CreateContact', {
+    this.refs.navHelper.navigate('ContactForm', {
+      title: 'Edit Contact',
       data: {
         role: 'edit',
         id: this.state.contactDetail.id,
@@ -92,6 +102,7 @@ export default class CreateContact extends Component {
   }
 
   render() {
+    if (!this.state.didMount) return <Loading />
     return (
       <View style={{ paddingHorizontal: 15 }}>
         <NavigationHelper ref={'navHelper'} navigation={this.props.navigation} />
@@ -103,16 +114,19 @@ export default class CreateContact extends Component {
             onPress={this._onChoosePhoto}
           />
           <Text style={{
-            fontFamily: 'Poppins-Regular'
+            fontFamily: 'Poppins-SemiBold',
+            fontSize: 17
           }}>
             {`${this.state.contactDetail.firstName} ${this.state.contactDetail.lastName}`}
           </Text>
+          <Text style={{
+            fontFamily: 'Poppins-Medium',
+            color: '#03b515',
+            fontSize: 13
+          }}>
+            {`Age: ${this.state.contactDetail.age}`}
+          </Text>
         </View>
-        <Text style={{
-          fontFamily: 'Poppins-Regular'
-        }}>
-          {`Age: ${this.state.contactDetail.age}`}
-        </Text>
         <View
           style={{
             alignItems: 'center'
@@ -125,7 +139,8 @@ export default class CreateContact extends Component {
               // borderColor: '#e2e2e2',
               backgroundColor: 'green',
               borderRadius: 10,
-              width: '90%'
+              width: '90%',
+              marginVertical: 5
             }}
           // textStyle={{
           //   color: 'blue'
@@ -137,9 +152,10 @@ export default class CreateContact extends Component {
             style={{
               // borderWidth: 1,
               // borderColor: '#e2e2e2',
-              backgroundColor: 'blue',
+              backgroundColor: '#5f7cef',
               borderRadius: 10,
-              width: '90%'
+              width: '90%',
+              marginVertical: 5
             }}
           // textStyle={{
           //   color: 'blue'
@@ -151,9 +167,10 @@ export default class CreateContact extends Component {
             style={{
               // borderWidth: 1,
               // borderColor: '#e2e2e2',
-              backgroundColor: 'red',
+              backgroundColor: '#f9095d',
               borderRadius: 10,
-              width: '90%'
+              width: '90%',
+              marginVertical: 5
             }}
           // textStyle={{
           //   color: 'blue'

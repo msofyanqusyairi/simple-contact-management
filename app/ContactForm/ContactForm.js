@@ -73,7 +73,7 @@ export default class ContactForm extends Component {
     let body = {
       firstName: this.state.firstName,
       lastName: this.state.lastName,
-      age: this.state.age,
+      age: parseInt(this.state.age),
       photo: this.state.photo
     }
     if (this.role == 'create') {
